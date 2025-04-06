@@ -23,7 +23,15 @@ Repository Structure and Running the App
 
 The repository is structured as follows:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   /app      /data             # Directory for storing the index files      /templates        # HTML templates for the Flask web interface      /static           # Static files (e.g., CSS, JS)      app.py            # Main Flask app file      indexer.py        # Indexing script      searcher.py       # Search logic      requirements.txt  # List of required dependencies      Dockerfile        # Dockerfile for containerization   `
+/app      
+    /templates        # HTML templates for the Flask web interface      
+    /static           # Static files (e.g., CSS, JS)      
+    app.py            # Main Flask app file      
+    indexer.py        # Indexing script      
+    searcher.py       # Search logic      
+    requirements.txt  # List of required dependencies      
+    Dockerfile        # Dockerfile for containerization
+ /data             # Storing the index files      
 
 ### Running the Application
 
