@@ -1,0 +1,17 @@
+#We are not using with zip files currently but it will be usefull as we start working with larger files.
+
+'''from tika import parser
+
+def extract_text_from_zip(zip_file_path):
+    """Extracts text content from files within a zip archive using Apache Tika."""
+    import zipfile
+    documents = []
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        for file_name in zip_ref.namelist():
+            with zip_ref.open(file_name) as file:
+                raw = parser.from_buffer(file.read())
+                documents.append(raw['content'])
+    return documents
+
+documents = extract_text_from_zip("path/to/your/zip/file.zip")
+'''

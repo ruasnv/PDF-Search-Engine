@@ -29,21 +29,24 @@
 
 <h2>Search Results for: <em>{{ query }}</em></h2>
 
-{% for filename, snippet in results %}
-<div class="result-box">
-    <strong>Document:</strong> {{ filename }} <br>
-    <strong>Context:</strong> <span class="highlight">{{ snippet | safe }}</span>
-</div>
+{% for result in results %}
+  <div>
+    <h3>{{ result.document }}</h3>
+    <p>Score: {{ result.score }}</p>
+    {% for snippet in result.snippets %}
+      <p>{{ snippet }}</p>
+    {% endfor %}
+  </div>
 {% endfor %}
+
 
 <div class="query-metrics">
     <h3>Performance Metrics</h3>
     <p><strong>Total Search Time:</strong> {{ total_time }} sec</p>
-    <p><strong>Time Spent Stemming:</strong> {{ stemming_time }} sec</p>
     <p><strong>Time Spent Searching:</strong> {{ search_time }} sec</p>
 </div>
 
-<a href="/app/static">Back to Search</a>
+<a href="/">Back to Search</a>
 
 </body>
 </html>
