@@ -34,7 +34,7 @@
     <h3>{{ result.document }}</h3>
     <p>Score: {{ result.score }}</p>
     {% for snippet in result.snippets %}
-      <p>{{ snippet }}</p>
+        <p>{{ snippet | safe }}</p>
     {% endfor %}
   </div>
 {% endfor %}

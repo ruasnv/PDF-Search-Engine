@@ -4,11 +4,11 @@ import indexer
 
 app = Flask(__name__)
 
+indexer.document_index()
 
 @app.route("/")
 def home():
-    return render_template("index.html")  # Load search page
-
+    return render_template("index.html")
 
 @app.route("/search", methods=["GET"])
 def search():
@@ -26,7 +26,7 @@ def search():
 
 @app.route("/rebuild", methods=["POST"])
 def rebuild():
-    indexer.index_documents()
+    indexer.document_index()
     return redirect(url_for("home"))
 
 

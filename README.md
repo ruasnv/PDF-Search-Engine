@@ -33,6 +33,13 @@ The repository is structured as follows:
     Dockerfile        # Dockerfile for containerization
  /data             # Storing the index files      
 
+### Summary of Pickle Files
+INDEX_PICKLE	inverted_index: term → {doc_id: tf}
+DOCS_PICKLE	documents: doc_id → full text
+DF_PICKLE	df: term → document frequency
+DOC_LENGTHS_PICKLE	doc_id → tf-idf norm length
+TERMS_PICKLE	doc_id → list of original words
+
 ### Running the Application
 
 1.  python -m venv .venv.\\.venv\\Scripts\\activate

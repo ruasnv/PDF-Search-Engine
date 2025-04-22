@@ -1,9 +1,10 @@
 import os
 import pymupdf
 import pickle
+import math
+from collections import defaultdict
 import preprocess
 import config
-from collections import defaultdict
 
 
 def extract_text_from_pdf(path):
@@ -18,32 +19,66 @@ def extract_text_from_pdf(path):
         return ""
 
 
-def index_documents(folder=config.DOCS_PATH):
+def document_index(folder=config.DOCS_PATH):
     inverted_index = defaultdict(lambda: defaultdict(int))
     documents = {}
+    docPreprocessed = {}
+    df = defaultdict(int)
+    doc_lengths = {}
+    doc_terms = {} #filename → list of original (non-preprocessed) words
 
     for filename in os.listdir(folder):
-        if filename.endswith(".pdf"):
-            path = os.path.join(folder, filename)
-            print(f"Indexing: {filename}")
-            text = extract_text_from_pdf(path)
-            if text:
-                documents[filename] = text
-                tokens = preprocess.preprocess(text)
-                for word in tokens:
-                    inverted_index[word][filename] += 1
-        else:
-            print(f"Skipping {filename} (because it is not a PDF)")
+        if not filename.endswith(".pdf"):
+            continue
 
-    # Convert defaultdict to regular dicts before pickling. Pickle uses core objects only.
-    inverted_index = {k: dict(v) for k, v in inverted_index.items()}
+        path = os.path.join(folder, filename)
+        print(f"Indexing: {filename}")
+        text = extract_text_from_pdf(path)
+        if not text:
+            continue
 
-    with open(config.INDEX_PATH, "wb") as f:
-        pickle.dump((inverted_index, documents), f)
+        documents[filename] = text
+        original_terms = text.split()
+        tokens = preprocess.preprocess(text)
+        doc_terms[filename] = original_terms  # Just store original terms (you can refine)
+        docPreprocessed[filename] = tokens
 
-    print(f"Indexing complete. {len(documents)} documents indexed.")
-    print(f"Index saved at: {config.INDEX_PATH}")
+        term_counts = defaultdict(int)
+        for token in tokens:
+            term_counts[token] += 1
+
+        for term, tf in term_counts.items():
+            inverted_index[term][filename] = tf
+
+    for term, postings in inverted_index.items():
+        df[term] = len(postings)
+
+    N = len(documents)
+    for filename in documents:
+        length = 0
+        for term in inverted_index:
+            if filename in inverted_index[term]:
+                tf = inverted_index[term][filename]
+                idf = math.log((N + 1) / (df[term] + 1))
+                tf_idf = tf * idf
+                length += tf_idf ** 2
+        doc_lengths[filename] = math.sqrt(length)
+
+    with open(config.INDEX_PICKLE, "wb") as f:
+        pickle.dump(dict(inverted_index), f)
+    with open(config.DOCS_PICKLE, "wb") as f:
+        pickle.dump(documents, f)
+    with open(config.DF_PICKLE, "wb") as f:
+        pickle.dump(dict(df), f)
+    with open(config.DOC_LENGTHS_PICKLE, "wb") as f:
+        pickle.dump(doc_lengths, f)
+    with open(config.TERMS_PICKLE, "wb") as f:
+        pickle.dump(doc_terms, f)
+    with open(config.PREPROCESSED_TERMS_PICKLE, "wb") as f:
+        pickle.dump(docPreprocessed, f)
+
+    print("Indexing complete.")
 
 
 if __name__ == "__main__":
-    index_documents()
+    document_index()
